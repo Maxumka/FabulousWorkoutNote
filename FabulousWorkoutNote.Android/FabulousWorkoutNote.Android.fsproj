@@ -117,6 +117,12 @@
       <Project>{A819F4A0-CEF6-4CB4-B185-3C2722005BCF}</Project>
       <Name>FabulousWorkoutNote</Name>
     </ProjectReference>
+    <Reference Include="FSharp.Data">
+      <HintPath>..\packages\FSharp.Data.4.0.1\lib\netstandard2.0\FSharp.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="FsHttp">
+      <HintPath>..\packages\SchlenkR.FsHttp.5.1.0\lib\netstandard2.1\FsHttp.dll</HintPath>
+    </Reference>
     <Reference Include="Java.Interop" />
     <Reference Include="Microsoft.Bcl.AsyncInterfaces">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\netstandard2.1\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
