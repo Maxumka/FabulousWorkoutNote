@@ -1,9 +1,11 @@
 ﻿namespace FabulousWorkoutNote
 
-open System
+module ListH = 
+    let updateAt index value source = 
+        source |> List.mapi (fun i v -> if i = index then value else v)
 
-module Helper = 
-    let setTime (date : DateTime) = 
-        DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0)
-
-
+    let rec removeAt index source = 
+        match index, source with 
+        | 0, _::xs -> xs
+        | i, x::xs -> x::removeAt (i - 1) xs
+        | i, [] -> failwith "index out of range in list"

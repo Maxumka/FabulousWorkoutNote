@@ -5,7 +5,6 @@ open Fabulous
 open Fabulous.XamarinForms
 open Xamarin.Forms
 open CustomControl
-open Model
 
 module Component = 
     let lineBlue = 
@@ -37,23 +36,23 @@ module Component =
 
     let viewCellExercise (exercise : Exercise) = 
         let maxSet = 
-            match exercise.sets.IsEmpty with 
-            | true -> {id = 0; weight = 0; reps = 0}
-            | _    -> exercise.sets |> List.maxBy (fun s -> s.weight) 
+            match exercise.Sets.IsEmpty with 
+            | true -> {Id = 0; Weight = 0; Reps = 0; ExerciseId = exercise.Id}
+            | _    -> exercise.Sets |> List.maxBy (fun s -> s.Weight) 
         View.ViewCell(view = View.StackLayout(children = [
             View.Frame(cornerRadius = 10., 
                        margin = Thickness(30., 10., 30., 10.), 
                        hasShadow = true,
                        content = View.StackLayout(children = [
-                View.Label(text = exercise.name, 
+                View.Label(text = exercise.Name, 
                            margin = Thickness(5., 0., 0., 0.), 
                            fontSize = FontSize.Size 18.)
                 View.BoxView(backgroundColor = Color.FromHex("#2195f2"), 
                              horizontalOptions = LayoutOptions.FillAndExpand).HeightRequest(0.5)
                 View.Grid(coldefs = [Dimension.Stars 1.; Dimension.Stars 0.3; Dimension.Stars 0.3], 
                           children = [
-                    View.Label(text = $"{maxSet.weight} kgs", fontSize = FontSize.Size 16.).Column(1)
-                    View.Label(text = $"{maxSet.reps} reps", fontSize = FontSize.Size 16.).Column(2)
+                    View.Label(text = $"{maxSet.Weight} kgs", fontSize = FontSize.Size 16.).Column(1)
+                    View.Label(text = $"{maxSet.Reps} reps", fontSize = FontSize.Size 16.).Column(2)
                 ])
             ]))
         ]))
@@ -68,13 +67,13 @@ module Component =
                     coldefs = [Dimension.Star; Dimension.Star],
                     children = [
                         View.Label(
-                            text = $"{set.weight} kgs",
+                            text = $"{set.Weight} kgs",
                             fontSize = FontSize.Size 20.0,
                             horizontalOptions = LayoutOptions.Center,
                             verticalOptions = LayoutOptions.Center
                         ).Column(0)
                         View.Label(
-                            text = $"{set.reps} reps",
+                            text = $"{set.Reps} reps",
                             fontSize = FontSize.Size 20.0,
                             horizontalOptions = LayoutOptions.Center,
                             verticalOptions = LayoutOptions.Center

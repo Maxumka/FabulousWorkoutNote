@@ -18,10 +18,6 @@ open System.IO
 type MainActivity() =
     inherit FormsAppCompatActivity()
 
-    let getDbPath() =
-        let path = Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-        Path.Combine(path, "data.db3");
-
     override this.OnCreate(bundle: Bundle) =
         FormsAppCompatActivity.TabLayoutResource <- Resources.Layout.Tabbar
         FormsAppCompatActivity.ToolbarResource <- Resources.Layout.Toolbar
@@ -29,8 +25,7 @@ type MainActivity() =
         base.OnCreate (bundle)
         Xamarin.Essentials.Platform.Init(this, bundle)
         Xamarin.Forms.Forms.Init(this, bundle)
-        let dbPath = getDbPath()
-        let app = FabulousWorkoutNote.App(dbPath)
+        let app = FabulousWorkoutNote.App()
         this.LoadApplication(app)
 
     override this.OnRequestPermissionsResult(requestCode: int, permissions: string[], [<GeneratedEnum>] grantResults: Android.Content.PM.Permission[]) =

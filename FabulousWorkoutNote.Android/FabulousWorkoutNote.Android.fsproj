@@ -21,9 +21,9 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <SelectedDevice>Pixel_2_API_30</SelectedDevice>
-    <ActiveDebugProfile>Pixel_2_API_30</ActiveDebugProfile>
-    <DefaultDevice>Pixel_2_API_30</DefaultDevice>
+    <SelectedDevice>pixel_5_-_api_28</SelectedDevice>
+    <ActiveDebugProfile>pixel_5_-_api_28</ActiveDebugProfile>
+    <DefaultDevice>pixel_5_-_api_28</DefaultDevice>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -120,6 +120,9 @@
     <Reference Include="FSharp.Data">
       <HintPath>..\packages\FSharp.Data.4.0.1\lib\netstandard2.0\FSharp.Data.dll</HintPath>
     </Reference>
+    <Reference Include="FSharp.Json">
+      <HintPath>..\packages\FSharp.Json.0.4.1\lib\netstandard2.0\FSharp.Json.dll</HintPath>
+    </Reference>
     <Reference Include="FsHttp">
       <HintPath>..\packages\SchlenkR.FsHttp.5.1.0\lib\netstandard2.1\FsHttp.dll</HintPath>
     </Reference>
@@ -135,18 +138,6 @@
     </Reference>
     <Reference Include="Microsoft.DotNet.PlatformAbstractions">
       <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.3.1.6\lib\netstandard2.0\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.3.1.18\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Abstractions.3.1.18\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.3.1.18\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Sqlite.Core.3.1.18\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Sqlite.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions">
       <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.5.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
