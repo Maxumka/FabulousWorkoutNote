@@ -1,36 +1,43 @@
 ﻿namespace FabulousWorkoutNote
 
-open Model 
 open CustomControl
 open Xamarin.Forms
 open Fabulous.XamarinForms
+open Fabulous
 
 module ExercisePage = 
     type Model = 
-        { exercise : Exercise;
-          newSet : Set;
-          selectedIndexSet : int option}
+        {exercise : Exercise
+         newSet : Set
+         selectedIndexSet : int option}
 
     let init exercise =
-        { exercise = exercise;
-          newSet = {id = 0; weight = 0; reps = 0};
-          selectedIndexSet = None}
+        {exercise = exercise;
+         newSet = {Id = 0; Weight = 0; Reps = 0; ExerciseId = exercise.Id};
+         selectedIndexSet = None}
 
     type Msg = 
+        // http service msg
         | UpdateName of string
+        | DoneUpdateName of unit
+
+        | AddNewSet 
+        | DoneAddSet of Set
+
+        | DeleteExercise
+        | DoneDeleteExercise of unit
+
+        | UpdateSet
+        | DoneUpdateSet of unit
+
+        | DeleteSet
+        | DoneDeleteSet of unit
+
+        // other msg
         | UpdateWeight of string
         | UpdateReps of string
-        | AddNewSet 
-        | ClearNewSet
-        | DeleteExercise
         | SelectSet of int option
-        | UpdateSet
-        | DeleteSet
-
-    let updateAddSet (sets : Set list) (set : Set) = 
-        match set.reps with 
-        | 0 -> sets 
-        | _ -> sets @ [set]
+        | ClearNewSet
 
     let updateSet (model : Model) = 
         match model.selectedIndexSet with 
@@ -38,47 +45,102 @@ module ExercisePage =
             model
         | Some index -> 
             let sets =
-                model.exercise.sets 
-                |> List.mapi(fun i v -> if index = i then model.newSet else v)
-            {model with exercise = {model.exercise with sets = sets}}
+                model.exercise.Sets |> ListH.updateAt index model.newSet
+            {model with exercise = {model.exercise with Sets = sets}}
 
     let deleteSet (model : Model) = 
         match model.selectedIndexSet with 
         | None -> model 
         | Some index -> 
-            let sets = model.exercise.sets |> ResizeArray
-            sets.RemoveAt(index) 
-            {model with exercise = {model.exercise with sets = sets |> Seq.toList}}
+            let sets = model.exercise.Sets |> ListH.removeAt index
+            {model with exercise = {model.exercise with Sets = sets}}
 
     let updateSelectSet (model : Model) = 
         match model.selectedIndexSet with 
         | Some index -> 
-            {model with newSet = model.exercise.sets.[index]}
+            {model with newSet = model.exercise.Sets.[index]}
         | None -> model
 
     let update msg model =
+        let updateName name =
+            async {
+                let exercise = {model.exercise with Name = name}
+                do! HttpService.udpateExercise exercise
+                return () |> DoneUpdateName } |> Cmd.ofAsyncMsg
+         
+        let addSet (set : Set) = 
+            async {
+                let! set = HttpService.addSet set
+                return set |> DoneAddSet } |> Cmd.ofAsyncMsg
+
+        let updateSet' (set : Set) = 
+            async {
+                do! HttpService.updateSet set 
+                return () |> DoneUpdateSet } |> Cmd.ofAsyncMsg
+
+        let deleteSet' id = 
+            async {
+                do! HttpService.deleteSet id 
+                return () |> DoneDeleteSet } |> Cmd.ofAsyncMsg
+
+        let deleteExercise' id = 
+            async {
+                do! HttpService.deleteExercise id
+                return () |> DoneDeleteExercise } |> Cmd.ofAsyncMsg
+
         match msg with
         | UpdateName name -> 
-            {model with exercise = {model.exercise with name = name}}
+            let model = {model with exercise = {model.exercise with Name = name}}
+            model, updateName name, ExtMsg.NoOp
+        | DoneUpdateName _ -> 
+            model, Cmd.none, ExtMsg.NoOp
+        
         | UpdateWeight weight -> 
-            {model with newSet = {model.newSet with weight = weight |> int}}
+            {model with newSet = {model.newSet with Weight = weight |> double}}, Cmd.none, ExtMsg.NoOp
         | UpdateReps reps -> 
-            {model with newSet = {model.newSet with reps = reps |> int}}
+            {model with newSet = {model.newSet with Reps = reps |> int}}, Cmd.none, ExtMsg.NoOp
+        
         | AddNewSet -> 
-            {model with exercise = {model.exercise with sets = updateAddSet model.exercise.sets model.newSet}}
-        | ClearNewSet -> {model with newSet = {id = 0; weight = 0; reps = 0}}
+            model, addSet model.newSet, ExtMsg.NoOp
+        | DoneAddSet set -> 
+            let sets = model.exercise.Sets @ [set]
+            let exercise = {model.exercise with Sets = sets}
+            {model with exercise = exercise}, Cmd.none, ExtMsg.NoOp
+
+        | ClearNewSet -> 
+            let newSet = {model.newSet with Weight = 0; Reps = 0}
+            {model with newSet = newSet}, Cmd.none, ExtMsg.NoOp
         | SelectSet index -> 
             let newModel = {model with selectedIndexSet = index}
-            updateSelectSet newModel
+            updateSelectSet newModel, Cmd.none, ExtMsg.NoOp
+
         | UpdateSet -> 
             let newModel = updateSet model 
-            {newModel with selectedIndexSet = None; 
-                           newSet = {id = 0; weight = 0; reps = 0}}
+            match newModel.selectedIndexSet with 
+            | Some i -> 
+                let set = newModel.exercise.Sets.[i]
+                {newModel with selectedIndexSet = None}, updateSet' set, ExtMsg.NoOp
+            | None -> 
+                {newModel with selectedIndexSet = None}, Cmd.none, ExtMsg.NoOp
+
+        | DoneUpdateSet _ -> 
+            model, Cmd.none, ExtMsg.NoOp
+
         | DeleteSet -> 
-            let newModel = deleteSet model 
-            {newModel with selectedIndexSet = None
-                           newSet = {id = 0; weight = 0; reps = 0}}
-        | _ -> model
+            match model.selectedIndexSet with 
+            | Some i -> 
+                let id = model.exercise.Sets.[i].Id
+                let newModel = deleteSet model 
+                {newModel with selectedIndexSet = None}, deleteSet' id, ExtMsg.NoOp
+            | None -> 
+                {model with selectedIndexSet = None}, Cmd.none, ExtMsg.NoOp
+
+        | DeleteExercise -> 
+            model, deleteExercise' model.exercise.Id, ExtMsg.NoOp
+        | DoneDeleteExercise _ -> 
+            model, Cmd.none, ExtMsg.NavWorkoutPageAfterDelete model.exercise.Id
+
+        | _ -> model, Cmd.none, ExtMsg.NoOp
 
     let view (model : Model) dispatch = 
         // Actions
@@ -110,7 +172,7 @@ module ExercisePage =
                         content = View.StackLayout(
                             children = [
                                 View.Entry(
-                                    text = model.exercise.name,
+                                    text = model.exercise.Name,
                                     textChanged = updateName
                                 )
                             ]
@@ -136,11 +198,11 @@ module ExercisePage =
                                 match model.selectedIndexSet with 
                                 | Some index ->
                                     View.Entry(
-                                        text = (model.exercise.sets.[index].weight |> string),
+                                        text = (model.exercise.Sets.[index].Weight |> string),
                                         textChanged = updateWeight
                                     ).Row(1).Column(0)
                                     View.Entry(
-                                        text = (model.exercise.sets.[index].reps |> string),
+                                        text = (model.exercise.Sets.[index].Reps |> string),
                                         textChanged = updateReps
                                     ).Row(1).Column(1)
                                     View.Button(
@@ -157,11 +219,11 @@ module ExercisePage =
                                     ).Row(2).Column(1).WhiteText()
                                 | None -> 
                                     View.Entry(
-                                        text = (model.newSet.weight |> string),
+                                        text = (model.newSet.Weight |> string),
                                         textChanged = updateWeight
                                     ).Row(1).Column(0)
                                     View.Entry(
-                                        text = (model.newSet.reps |> string),
+                                        text = (model.newSet.Reps |> string),
                                         textChanged = updateReps
                                     ).Row(1).Column(1)
                                     View.Button(
@@ -184,7 +246,7 @@ module ExercisePage =
                         selectedItem = model.selectedIndexSet,
                         itemSelected = selectSet,
                         items = [
-                            for set in model.exercise.sets do 
+                            for set in model.exercise.Sets do 
                                 Component.viewCellSet set
                         ]
                     ).Row(2)
