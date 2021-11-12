@@ -20,6 +20,7 @@ module WorkoutPage =
     type Msg = 
         | SelectDate of DateTime 
         | SelectExercise of int 
+        | LoadSets of Set list
         | AddExercise 
         | OkAddExercise of Exercise
 
@@ -28,6 +29,11 @@ module WorkoutPage =
             let exercise = {Id = 0; Name = "new exercise"; Sets = []; Workout = model.Workout}
             let! exercise' = HttpService.addExercise exercise
             return exercise' |> OkAddExercise } |> Cmd.ofAsyncMsg
+
+    let loadSetsByExerciseId id = 
+        async {
+            let! sets = HttpService.getSetsByExerciseId id 
+            return sets |> LoadSets } |> Cmd.ofAsyncMsg
 
     let update msg model =
         match msg with 
@@ -38,7 +44,9 @@ module WorkoutPage =
             let w = {model.Workout with Exercises = es}
             {model with Workout = w}, Cmd.none, ExtMsg.NoOp
         | SelectExercise index -> 
-            model, Cmd.none, ExtMsg.NavExercisePage model.Workout.Exercises.[index]
+            let exercise = model.Workout.Exercises.[index]
+            let sets = HttpService.getSetsByExerciseId exercise.Id |> Async.RunSynchronously
+            model, Cmd.none, ExtMsg.NavExercisePage {exercise with Sets = sets}
         | SelectDate date -> 
             init date, Cmd.none, ExtMsg.NoOp
             
