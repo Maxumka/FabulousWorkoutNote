@@ -35,10 +35,6 @@ module Component =
                   children = children)
 
     let viewCellExercise (exercise : Exercise) = 
-        let maxSet = 
-            match exercise.Sets.IsEmpty with 
-            | true -> {Id = 0; Weight = 0; Reps = 0; ExerciseId = exercise.Id}
-            | _    -> exercise.Sets |> List.maxBy (fun s -> s.Weight) 
         View.ViewCell(view = View.StackLayout(children = [
             View.Frame(cornerRadius = 10., 
                        margin = Thickness(30., 10., 30., 10.), 
@@ -49,11 +45,6 @@ module Component =
                            fontSize = FontSize.Size 18.)
                 View.BoxView(backgroundColor = Color.FromHex("#2195f2"), 
                              horizontalOptions = LayoutOptions.FillAndExpand).HeightRequest(0.5)
-                View.Grid(coldefs = [Dimension.Stars 1.; Dimension.Stars 0.3; Dimension.Stars 0.3], 
-                          children = [
-                    View.Label(text = $"{maxSet.Weight} kgs", fontSize = FontSize.Size 16.).Column(1)
-                    View.Label(text = $"{maxSet.Reps} reps", fontSize = FontSize.Size 16.).Column(2)
-                ])
             ]))
         ]))
 
