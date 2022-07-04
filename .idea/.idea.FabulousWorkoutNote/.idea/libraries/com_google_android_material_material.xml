@@ -1,0 +1,10 @@
+﻿<component name="libraryTable">
+  <library name="com.google.android.material.material">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../../Temp/JetBrains/xamarinAarPackages/com.google.android.material.material/classes.jar" />
+      <root url="file://$PROJECT_DIR$/../../../../Temp/JetBrains/xamarinAarPackages/com.google.android.material.material/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

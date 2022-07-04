@@ -5,11 +5,7 @@ open System.Runtime.CompilerServices
 open System.Runtime.InteropServices
 open Android.App
 
-// the name of the type here needs to match the name inside the ResourceDesigner attribute
-type Resources = FabulousWorkoutNote.Android.Resource
-[<assembly: Android.Runtime.ResourceDesigner("FabulousWorkoutNote.Android.Resources", IsApplication=true)>]
-
-// General Information about an assembly is controlled through the following 
+// General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [<assembly: AssemblyTitle("FabulousWorkoutNote.Android")>]
@@ -17,7 +13,7 @@ type Resources = FabulousWorkoutNote.Android.Resource
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
 [<assembly: AssemblyProduct("FabulousWorkoutNote.Android")>]
-[<assembly: AssemblyCopyright("Copyright ©  2014")>]
+[<assembly: AssemblyCopyright("Copyright ©  2018-2022")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 [<assembly: ComVisible(false)>]
@@ -25,11 +21,11 @@ type Resources = FabulousWorkoutNote.Android.Resource
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version
-//      Minor Version 
+//      Minor Version
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Build and Revision Numbers 
+// You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [<assembly: AssemblyVersion("1.0.*")>]
 [<assembly: AssemblyVersion("1.0.0.0")>]
@@ -38,4 +34,4 @@ type Resources = FabulousWorkoutNote.Android.Resource
 // Add some common permissions, these can be removed if not needed
 [<assembly: UsesPermission(Android.Manifest.Permission.Internet)>]
 [<assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)>]
-do()
+do ()
